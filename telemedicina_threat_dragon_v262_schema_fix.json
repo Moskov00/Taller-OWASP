@@ -1,0 +1,506 @@
+{
+  "version": "2.2.0",
+  "summary": {
+    "title": "Modelo de Amenazas - Plataforma de Telemedicina",
+    "owner": "Yasser Patino & Victor Calderon",
+    "description": "Analisis STRIDE para los procesos de agendamiento y consulta virtual con intercambio de historial clinico.",
+    "id": 0
+  },
+  "detail": {
+    "contributors": [],
+    "diagrams": [
+      {
+        "title": "DFD Telemedicina",
+        "id": 0,
+        "diagramType": "STRIDE",
+        "placeholder": "New STRIDE diagram description",
+        "thumbnail": "./public/content/images/thumbnail.stride.jpg",
+        "version": "2.2.0",
+        "cells": [
+          {
+            "type": "tm.Actor",
+            "size": {
+              "width": 130,
+              "height": 70
+            },
+            "position": {
+              "x": 60,
+              "y": 120
+            },
+            "angle": 0,
+            "id": "a1b2c3d4-0001-0001-0001-aaaaaaaaaaaa",
+            "z": 1,
+            "threats": [
+              {
+                "id": "threat-001",
+                "title": "Suplantacion de Identidad del Paciente",
+                "status": "Open",
+                "severity": "High",
+                "type": "Spoofing",
+                "description": "Un atacante podria hacerse pasar por un paciente legitimo para acceder a citas o historial medico ajeno.",
+                "mitigation": "Implementar autenticacion multifactor (MFA) con OTP via SMS o aplicacion autenticadora.",
+                "modelType": "STRIDE"
+              },
+              {
+                "id": "threat-002",
+                "title": "Repudio de Solicitudes de Citas",
+                "status": "Open",
+                "severity": "Medium",
+                "type": "Repudiation",
+                "description": "El paciente podria negar haber solicitado o cancelado una cita medica.",
+                "mitigation": "Registrar logs de auditoria firmados digitalmente con timestamp para todas las acciones del paciente.",
+                "modelType": "STRIDE"
+              }
+            ],
+            "attrs": {
+              "text": {
+                "text": "Paciente\n(Ciudadano)"
+              }
+            }
+          },
+          {
+            "type": "tm.Actor",
+            "size": {
+              "width": 130,
+              "height": 70
+            },
+            "position": {
+              "x": 60,
+              "y": 320
+            },
+            "angle": 0,
+            "id": "a1b2c3d4-0002-0002-0002-bbbbbbbbbbbb",
+            "z": 2,
+            "threats": [
+              {
+                "id": "threat-003",
+                "title": "Suplantacion de Medico Especialista",
+                "status": "Open",
+                "severity": "Critical",
+                "type": "Spoofing",
+                "description": "Un actor malicioso podria suplantar a un medico para acceder o modificar historiales clinicos de pacientes.",
+                "mitigation": "Autenticacion con certificado digital profesional y validacion de credenciales medicas contra registro oficial.",
+                "modelType": "STRIDE"
+              },
+              {
+                "id": "threat-004",
+                "title": "Elevacion de Privilegios del Medico",
+                "status": "Open",
+                "severity": "High",
+                "type": "ElevationOfPrivilege",
+                "description": "Un medico con acceso limitado podria intentar acceder a expedientes de pacientes fuera de su asignacion.",
+                "mitigation": "Control de acceso basado en roles (RBAC) con restriccion por paciente asignado. Auditorias periodicas.",
+                "modelType": "STRIDE"
+              }
+            ],
+            "attrs": {
+              "text": {
+                "text": "Medico\n(Especialista)"
+              }
+            }
+          },
+          {
+            "type": "tm.Process",
+            "size": {
+              "width": 140,
+              "height": 100
+            },
+            "position": {
+              "x": 320,
+              "y": 110
+            },
+            "angle": 0,
+            "id": "a1b2c3d4-0003-0003-0003-cccccccccccc",
+            "z": 3,
+            "threats": [
+              {
+                "id": "threat-005",
+                "title": "Inyeccion SQL en Modulo de Autenticacion",
+                "status": "Open",
+                "severity": "Critical",
+                "type": "Tampering",
+                "description": "Un atacante podria manipular los campos de login para ejecutar consultas SQL maliciosas y bypassear la autenticacion.",
+                "mitigation": "Usar consultas parametrizadas (prepared statements) y ORM. Validar y sanitizar todos los inputs del usuario.",
+                "modelType": "STRIDE"
+              },
+              {
+                "id": "threat-006",
+                "title": "Denegacion de Servicio en Agendamiento",
+                "status": "Open",
+                "severity": "High",
+                "type": "DenialOfService",
+                "description": "Un atacante podria inundar el modulo de citas con solicitudes masivas, impidiendo a pacientes legitimos agendar.",
+                "mitigation": "Implementar rate limiting por IP y por sesion. Usar CAPTCHA en el formulario de agendamiento.",
+                "modelType": "STRIDE"
+              },
+              {
+                "id": "threat-007",
+                "title": "Fuga de Tokens de Sesion",
+                "status": "Open",
+                "severity": "High",
+                "type": "InformationDisclosure",
+                "description": "Los tokens JWT podrian ser interceptados si no se gestiona correctamente su almacenamiento y transmision.",
+                "mitigation": "Usar HTTPS/TLS 1.3. Almacenar tokens en HttpOnly cookies. Implementar rotacion y expiracion de tokens.",
+                "modelType": "STRIDE"
+              }
+            ],
+            "attrs": {
+              "text": {
+                "text": "Modulo de\nAutenticacion\ny Citas"
+              }
+            }
+          },
+          {
+            "type": "tm.Process",
+            "size": {
+              "width": 140,
+              "height": 100
+            },
+            "position": {
+              "x": 320,
+              "y": 310
+            },
+            "angle": 0,
+            "id": "a1b2c3d4-0004-0004-0004-dddddddddddd",
+            "z": 4,
+            "threats": [
+              {
+                "id": "threat-008",
+                "title": "Acceso No Autorizado a Historial Clinico",
+                "status": "Open",
+                "severity": "Critical",
+                "type": "InformationDisclosure",
+                "description": "Un usuario sin autorizacion podria visualizar el expediente medico completo de un paciente (violacion HIPAA/GDPR).",
+                "mitigation": "Cifrado de datos en reposo y en transito. Control de acceso granular. Enmascaramiento de datos sensibles.",
+                "modelType": "STRIDE"
+              },
+              {
+                "id": "threat-009",
+                "title": "Modificacion Maliciosa de Expediente Medico",
+                "status": "Open",
+                "severity": "Critical",
+                "type": "Tampering",
+                "description": "Un atacante interno podria alterar diagnosticos, medicaciones o resultados de laboratorio en el historial.",
+                "mitigation": "Firma digital de registros medicos. Versionado inmutable de cambios. Logs de auditoria con hash.",
+                "modelType": "STRIDE"
+              },
+              {
+                "id": "threat-010",
+                "title": "Repudio de Modificaciones al Historial",
+                "status": "Open",
+                "severity": "High",
+                "type": "Repudiation",
+                "description": "Un medico podria negar haber modificado un expediente medico de forma incorrecta.",
+                "mitigation": "Implementar firma digital por parte del medico en cada modificacion. Logs de no repudio.",
+                "modelType": "STRIDE"
+              }
+            ],
+            "attrs": {
+              "text": {
+                "text": "Modulo de\nConsulta e\nHistorial"
+              }
+            }
+          },
+          {
+            "type": "tm.Store",
+            "size": {
+              "width": 150,
+              "height": 70
+            },
+            "position": {
+              "x": 620,
+              "y": 130
+            },
+            "angle": 0,
+            "id": "a1b2c3d4-0005-0005-0005-eeeeeeeeeeee",
+            "z": 5,
+            "threats": [
+              {
+                "id": "threat-011",
+                "title": "Acceso Directo No Autorizado a BD de Citas",
+                "status": "Open",
+                "severity": "High",
+                "type": "InformationDisclosure",
+                "description": "Un atacante con acceso a la red interna podria conectarse directamente a la BD de citas sin pasar por la aplicacion.",
+                "mitigation": "Segmentar la BD en una VLAN privada. Restringir acceso solo desde IP del servidor de aplicaciones. Firewall de BD.",
+                "modelType": "STRIDE"
+              },
+              {
+                "id": "threat-012",
+                "title": "Eliminacion Masiva de Registros de Citas",
+                "status": "Open",
+                "severity": "High",
+                "type": "DenialOfService",
+                "description": "Un atacante con acceso a la BD podria eliminar todos los registros de citas, interrumpiendo el servicio.",
+                "mitigation": "Backups automaticos diarios con almacenamiento offsite. Punto de recuperacion (RPO) maximo de 1 hora.",
+                "modelType": "STRIDE"
+              }
+            ],
+            "attrs": {
+              "text": {
+                "text": "BD Citas\ny Agenda"
+              }
+            }
+          },
+          {
+            "type": "tm.Store",
+            "size": {
+              "width": 150,
+              "height": 70
+            },
+            "position": {
+              "x": 620,
+              "y": 330
+            },
+            "angle": 0,
+            "id": "a1b2c3d4-0006-0006-0006-ffffffffffff",
+            "z": 6,
+            "threats": [
+              {
+                "id": "threat-013",
+                "title": "Robo de Expedientes Medicos (Data Breach)",
+                "status": "Open",
+                "severity": "Critical",
+                "type": "InformationDisclosure",
+                "description": "Exfiltracion masiva de historiales clinicos que contienen datos sensibles: diagnosticos, medicamentos, datos personales.",
+                "mitigation": "Cifrado AES-256 de la BD. Tokenizacion de datos PII. Monitoreo de anomalias con SIEM. DLP (Data Loss Prevention).",
+                "modelType": "STRIDE"
+              },
+              {
+                "id": "threat-014",
+                "title": "Corrupcion de Datos en Expedientes",
+                "status": "Open",
+                "severity": "Critical",
+                "type": "Tampering",
+                "description": "Alteracion de datos medicos criticos (tipo de sangre, alergias, medicacion actual) que podria causar dano al paciente.",
+                "mitigation": "Checksums de integridad por registro. Backups con verificacion de hash. Replicacion de BD en tiempo real.",
+                "modelType": "STRIDE"
+              }
+            ],
+            "attrs": {
+              "text": {
+                "text": "BD Expedientes\nMedicos (HC)"
+              }
+            }
+          },
+          {
+            "type": "tm.Boundary",
+            "smooth": true,
+            "source": {
+              "x": 235,
+              "y": 40
+            },
+            "target": {
+              "x": 235,
+              "y": 490
+            },
+            "vertices": [],
+            "id": "a1b2c3d4-0007-0007-0007-000000000007",
+            "z": 7,
+            "attrs": {
+              "text": {
+                "text": "Trust Boundary"
+              }
+            }
+          },
+          {
+            "type": "tm.Flow",
+            "smooth": true,
+            "source": {
+              "id": "a1b2c3d4-0001-0001-0001-aaaaaaaaaaaa"
+            },
+            "target": {
+              "id": "a1b2c3d4-0003-0003-0003-cccccccccccc"
+            },
+            "vertices": [],
+            "id": "flow-0001-paciente-to-citas",
+            "z": 10,
+            "threats": [
+              {
+                "id": "threat-015",
+                "title": "Intercepcion de Credenciales en Transito",
+                "status": "Open",
+                "severity": "High",
+                "type": "InformationDisclosure",
+                "description": "Ataque Man-in-the-Middle (MitM) para capturar credenciales de login del paciente en la red publica.",
+                "mitigation": "Forzar HTTPS con HSTS. Certificado SSL/TLS valido. Certificate Pinning en la app movil.",
+                "modelType": "STRIDE"
+              }
+            ],
+            "attrs": {
+              "text": {
+                "text": "Solicitud Login\ny Agendamiento\n[HTTPS]"
+              }
+            }
+          },
+          {
+            "type": "tm.Flow",
+            "smooth": true,
+            "source": {
+              "id": "a1b2c3d4-0003-0003-0003-cccccccccccc"
+            },
+            "target": {
+              "id": "a1b2c3d4-0001-0001-0001-aaaaaaaaaaaa"
+            },
+            "vertices": [],
+            "id": "flow-0002-citas-to-paciente",
+            "z": 11,
+            "threats": [],
+            "attrs": {
+              "text": {
+                "text": "Confirmacion\nde Cita\n[HTTPS]"
+              }
+            }
+          },
+          {
+            "type": "tm.Flow",
+            "smooth": true,
+            "source": {
+              "id": "a1b2c3d4-0002-0002-0002-bbbbbbbbbbbb"
+            },
+            "target": {
+              "id": "a1b2c3d4-0004-0004-0004-dddddddddddd"
+            },
+            "vertices": [],
+            "id": "flow-0003-medico-to-historial",
+            "z": 12,
+            "threats": [
+              {
+                "id": "threat-016",
+                "title": "Acceso no Autorizado por Sesion Robada",
+                "status": "Open",
+                "severity": "Critical",
+                "type": "Spoofing",
+                "description": "Un atacante con un token de sesion robado podria acceder al historial clinico como si fuera el medico legitimo.",
+                "mitigation": "Validar IP y User-Agent por sesion. Implementar timeout de sesion corto (15 min). Re-autenticacion para datos criticos.",
+                "modelType": "STRIDE"
+              }
+            ],
+            "attrs": {
+              "text": {
+                "text": "Acceso a\nHistorial Clinico\n[HTTPS]"
+              }
+            }
+          },
+          {
+            "type": "tm.Flow",
+            "smooth": true,
+            "source": {
+              "id": "a1b2c3d4-0004-0004-0004-dddddddddddd"
+            },
+            "target": {
+              "id": "a1b2c3d4-0002-0002-0002-bbbbbbbbbbbb"
+            },
+            "vertices": [],
+            "id": "flow-0004-historial-to-medico",
+            "z": 13,
+            "threats": [],
+            "attrs": {
+              "text": {
+                "text": "Datos del\nExpediente\n[HTTPS]"
+              }
+            }
+          },
+          {
+            "type": "tm.Flow",
+            "smooth": true,
+            "source": {
+              "id": "a1b2c3d4-0003-0003-0003-cccccccccccc"
+            },
+            "target": {
+              "id": "a1b2c3d4-0005-0005-0005-eeeeeeeeeeee"
+            },
+            "vertices": [],
+            "id": "flow-0005-citas-to-bd-citas",
+            "z": 14,
+            "threats": [
+              {
+                "id": "threat-017",
+                "title": "Inyeccion SQL hacia BD de Citas",
+                "status": "Open",
+                "severity": "High",
+                "type": "Tampering",
+                "description": "Input malicioso desde el modulo podria resultar en manipulacion de registros en la base de datos de citas.",
+                "mitigation": "Prepared statements obligatorios. WAF (Web Application Firewall) delante del servidor de aplicaciones.",
+                "modelType": "STRIDE"
+              }
+            ],
+            "attrs": {
+              "text": {
+                "text": "Escritura/\nLectura Citas\n[SQL/TLS]"
+              }
+            }
+          },
+          {
+            "type": "tm.Flow",
+            "smooth": true,
+            "source": {
+              "id": "a1b2c3d4-0005-0005-0005-eeeeeeeeeeee"
+            },
+            "target": {
+              "id": "a1b2c3d4-0003-0003-0003-cccccccccccc"
+            },
+            "vertices": [],
+            "id": "flow-0006-bd-citas-to-citas",
+            "z": 15,
+            "threats": [],
+            "attrs": {
+              "text": {
+                "text": "Resultado\nConsulta Citas\n[SQL/TLS]"
+              }
+            }
+          },
+          {
+            "type": "tm.Flow",
+            "smooth": true,
+            "source": {
+              "id": "a1b2c3d4-0004-0004-0004-dddddddddddd"
+            },
+            "target": {
+              "id": "a1b2c3d4-0006-0006-0006-ffffffffffff"
+            },
+            "vertices": [],
+            "id": "flow-0007-historial-to-bd-hc",
+            "z": 16,
+            "threats": [
+              {
+                "id": "threat-018",
+                "title": "Escritura de Datos Medicos Sin Validacion",
+                "status": "Open",
+                "severity": "Critical",
+                "type": "Tampering",
+                "description": "El modulo podria escribir datos no validados o maliciosos en el expediente medico del paciente.",
+                "mitigation": "Validacion estricta de esquema antes de escritura en BD. Campos criticos con doble confirmacion del medico.",
+                "modelType": "STRIDE"
+              }
+            ],
+            "attrs": {
+              "text": {
+                "text": "Escritura/\nLectura HC\n[SQL/TLS]"
+              }
+            }
+          },
+          {
+            "type": "tm.Flow",
+            "smooth": true,
+            "source": {
+              "id": "a1b2c3d4-0006-0006-0006-ffffffffffff"
+            },
+            "target": {
+              "id": "a1b2c3d4-0004-0004-0004-dddddddddddd"
+            },
+            "vertices": [],
+            "id": "flow-0008-bd-hc-to-historial",
+            "z": 17,
+            "threats": [],
+            "attrs": {
+              "text": {
+                "text": "Resultado\nExpediente HC\n[SQL/TLS]"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
